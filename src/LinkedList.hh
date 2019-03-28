@@ -32,17 +32,12 @@ class LinkedList<T> {
     public function appendRange(Traversable<T> $values): void {
         $nodes = Vec\map($values, $val ==> new SingleNode($val));
 
-        if (C\count($nodes) > 0) {
-            $tail = C\reduce(
-                $nodes,
-                ($prev, $cur) ==> {
-                    $prev->append($cur);
-                    return $cur;
-                },
-                $this->tail,
-            );
-            $this->tail = $tail;
+        $prev = $this->tail;
+        foreach ($nodes as $node) {
+            $prev->append($node);
+            $prev = $node;
         }
+        $this->tail = $prev;
     }
 
     <<TimeComplexity('O(N)')>>
